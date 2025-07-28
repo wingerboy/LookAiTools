@@ -1,0 +1,394 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@layer base {
+  :root {
+    /* 科技风深色主题配色 */
+    --background: 222 84% 5%;        /* #0f172a 深空蓝背景 */
+    --foreground: 210 40% 98%;       /* #f8fafc 主文本 */
+    --card: 222 47% 11%;             /* #1e293b 卡片背景 */
+    --card-foreground: 210 40% 98%;  /* #f8fafc 卡片文本 */
+    --popover: 222 47% 11%;          /* #1e293b 弹窗背景 */
+    --popover-foreground: 210 40% 98%; /* #f8fafc 弹窗文本 */
+    --primary: 217 91% 60%;          /* #2563eb 主色 */
+    --primary-foreground: 0 0% 100%; /* #ffffff 主色上文本 */
+    --secondary: 215 25% 27%;        /* #334155 辅助色 */
+    --secondary-foreground: 210 40% 98%; /* #f8fafc 辅助色文本 */
+    --muted: 215 16% 47%;            /* #64748b 静音色 */
+    --muted-foreground: 215 20% 65%; /* #94a3b8 静音文本 */
+    --accent: 262 83% 58%;           /* #8b5cf6 强调色紫 */
+    --accent-foreground: 210 40% 98%; /* #f8fafc 强调色文本 */
+    --destructive: 0 84% 60%;        /* #ef4444 错误色 */
+    --destructive-foreground: 210 40% 98%; /* #f8fafc 错误色文本 */
+    --border: 215 25% 27%;           /* #334155 边框色 */
+    --input: 215 25% 27%;            /* #334155 输入框边框 */
+    --ring: 217 91% 60%;             /* #2563eb 焦点环 */
+    --radius: 0.75rem;
+
+    /* 科技风扩展颜色 */
+    --primary-light: 217 91% 70%;    /* #3b82f6 浅主色 */
+    --primary-dark: 217 91% 50%;     /* #1d4ed8 深主色 */
+    --success: 158 64% 52%;          /* #10b981 成功色 */
+    --warning: 43 96% 56%;           /* #f59e0b 警告色 */
+    --info: 188 94% 43%;             /* #06b6d4 信息色 */
+
+    /* 玻璃效果 */
+    --glass-bg: rgba(30, 41, 59, 0.8);
+    --glass-border: rgba(255, 255, 255, 0.1);
+
+    /* 渐变定义 */
+    --gradient-primary: linear-gradient(135deg, #2563eb 0%, #7c3aed 100%);
+    --gradient-tech: linear-gradient(135deg, #2563eb 0%, #7c3aed 50%, #06b6d4 100%);
+    --gradient-neon: linear-gradient(90deg, #00f5ff 0%, #0080ff 50%, #8000ff 100%);
+    --gradient-aurora: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+  }
+
+  .dark {
+    /* 深色模式使用相同的科技风配色 */
+    --background: 222 84% 5%;
+    --foreground: 210 40% 98%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 215 25% 27%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 215 16% 47%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 262 83% 58%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 215 25% 27%;
+    --input: 215 25% 27%;
+    --ring: 217 91% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    /* 确保html元素也有背景色 */
+    @apply bg-background;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    /* 强制设置最小高度和背景色，防止出现纯色背景 */
+    min-height: 100vh;
+    background-color: hsl(var(--background)) !important;
+  }
+
+  /* 确保根元素也有正确的背景 */
+  #root {
+    @apply bg-background;
+    min-height: 100vh;
+  }
+}
+
+@layer utilities {
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  
+  .flex-y-center {
+    @apply flex flex-col items-center;
+  }
+  
+  .bg-frosted-glass {
+    @apply backdrop-blur-lg backdrop-filter;
+  }
+  
+  /* Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  
+  /* 科技风渐变文本 */
+  .gradient-text {
+    background: var(--gradient-tech);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+  }
+
+  /* 科技风背景渐变 */
+  .gradient-bg {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
+  }
+
+  /* 科技风边框渐变 */
+  .gradient-border {
+    background: linear-gradient(hsl(var(--card)), hsl(var(--card))) padding-box,
+                var(--gradient-primary) border-box;
+    border: 2px solid transparent;
+    border-radius: 12px;
+  }
+
+  /* 玻璃拟态效果 */
+  .glass-effect {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  }
+
+  /* 霓虹发光效果 */
+  .glow-effect {
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+  }
+
+  .neon-glow {
+    color: hsl(var(--info));
+    text-shadow:
+      0 0 5px currentColor,
+      0 0 10px currentColor,
+      0 0 15px currentColor;
+  }
+
+  /* Hero区域科技风背景 */
+  .hero-gradient {
+    background: linear-gradient(135deg,
+      rgba(15, 23, 42, 0.95) 0%,
+      rgba(30, 41, 59, 0.9) 50%,
+      rgba(51, 65, 85, 0.85) 100%);
+  }
+  
+  .card-hover {
+    @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+  }
+  
+  /* 科技风按钮样式 */
+  .btn-primary {
+    background: var(--gradient-primary);
+    color: hsl(var(--primary-foreground));
+    border: none;
+    border-radius: 8px;
+    padding: 12px 24px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(37, 99, 235, 0.4);
+  }
+
+  .btn-secondary {
+    background: transparent;
+    color: hsl(var(--foreground));
+    border: 2px solid rgba(37, 99, 235, 0.3);
+    border-radius: 8px;
+    padding: 10px 22px;
+    transition: all 0.3s ease;
+  }
+
+  .btn-secondary:hover {
+    background: var(--glass-bg);
+    border-color: hsl(var(--primary));
+    backdrop-filter: blur(10px);
+  }
+
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.6s ease-out;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.3s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scaleIn {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .hover-lift {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  }
+
+  .hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 40px rgba(102, 126, 234, 0.15);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+  }
+
+  .animate-pulse-slow {
+    animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  .animate-bounce-slow {
+    animation: bounce 2s infinite;
+  }
+
+  .animate-gradient {
+    background-size: 200% 200%;
+    animation: gradient 3s ease infinite;
+  }
+
+  .stagger-animation {
+    animation: slideUp 0.6s ease-out forwards;
+  }
+
+  .stagger-animation:nth-child(1) { animation-delay: 0.1s; }
+  .stagger-animation:nth-child(2) { animation-delay: 0.2s; }
+  .stagger-animation:nth-child(3) { animation-delay: 0.3s; }
+  .stagger-animation:nth-child(4) { animation-delay: 0.4s; }
+  .stagger-animation:nth-child(5) { animation-delay: 0.5s; }
+  .stagger-animation:nth-child(6) { animation-delay: 0.6s; }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  @keyframes gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+    100% {
+      background-position: 0% 50%;
+    }
+  }
+
+  @keyframes shimmer {
+    0% {
+      background-position: -200px 0;
+    }
+    100% {
+      background-position: calc(200px + 100%) 0;
+    }
+  }
+
+  .shimmer {
+    background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.3), transparent);
+    background-size: 200px 100%;
+    animation: shimmer 2s infinite;
+  }
+
+  /* 科技风特效 */
+  .cyber-grid {
+    background-image:
+      linear-gradient(rgba(37, 99, 235, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(37, 99, 235, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+  }
+
+  .hologram-effect {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hologram-effect::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.2), transparent);
+    animation: hologram-scan 3s infinite;
+  }
+
+  @keyframes hologram-scan {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+
+  .data-stream {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .data-stream::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 2px;
+    height: 100%;
+    background: linear-gradient(to bottom, transparent, hsl(var(--primary)), transparent);
+    animation: data-flow 2s infinite;
+  }
+
+  @keyframes data-flow {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+  }
+}

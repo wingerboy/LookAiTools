@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Tools Navigator - Multilingual Test</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .language-switcher {
+            display: flex;
+            gap: 10px;
+        }
+        .language-switcher button {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .language-switcher button.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .language-switcher button:hover {
+            background: #f8f9fa;
+        }
+        .language-switcher button.active:hover {
+            background: #0056b3;
+        }
+        .section {
+            margin-bottom: 30px;
+        }
+        .section h2 {
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .categories {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .category-card {
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .category-card:hover {
+            background: #e9ecef;
+            border-color: #007bff;
+        }
+        .category-card.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        .category-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .category-count {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+        .tools {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .tool-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            background: white;
+            transition: all 0.2s;
+        }
+        .tool-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-color: #007bff;
+        }
+        .tool-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        .tool-description {
+            color: #666;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+        .tool-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9em;
+            color: #888;
+        }
+        .tool-category {
+            background: #e9ecef;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+        }
+        .tool-rating {
+            color: #ffc107;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 30px;
+        }
+        .pagination button {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .pagination button:hover {
+            background: #f8f9fa;
+        }
+        .pagination button.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1 id="pageTitle">AI Tools Navigator - Multilingual Test</h1>
+            <div class="language-switcher">
+                <button id="langEn" class="active" onclick="switchLanguage('en')">English</button>
+                <button id="langCn" onclick="switchLanguage('cn')">中文</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 id="categoriesTitle">Categories</h2>
+            <div id="categoriesContainer" class="categories">
+                <div class="loading">Loading categories...</div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2 id="toolsTitle">AI Tools</h2>
+            <div id="toolsContainer" class="tools">
+                <div class="loading">Loading tools...</div>
+            </div>
+            <div id="pagination" class="pagination"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = 'http://localhost:8001';
+        let currentLanguage = 'en';
+        let currentCategory = null;
+        let currentPage = 1;
+
+        // 语言切换
+        function switchLanguage(language) {
+            currentLanguage = language;
+            
+            // 更新按钮状态
+            document.getElementById('langEn').classList.toggle('active', language === 'en');
+            document.getElementById('langCn').classList.toggle('active', language === 'cn');
+            
+            // 更新页面标题
+            document.getElementById('pageTitle').textContent = 
+                language === 'en' ? 'AI Tools Navigator - Multilingual Test' : 'AI工具导航 - 多语言测试';
+            document.getElementById('categoriesTitle').textContent = 
+                language === 'en' ? 'Categories' : '分类';
+            document.getElementById('toolsTitle').textContent = 
+                language === 'en' ? 'AI Tools' : 'AI工具';
+            
+            // 重新加载数据
+            loadCategories();
+            loadTools();
+        }
+
+        // 加载分类
+        async function loadCategories() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/categories?language=${currentLanguage}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    renderCategories(result.data);
+                } else {
+                    showError('Failed to load categories');
+                }
+            } catch (error) {
+                showError('Error loading categories: ' + error.message);
+            }
+        }
+
+        // 渲染分类
+        function renderCategories(categories) {
+            const container = document.getElementById('categoriesContainer');
+            container.innerHTML = '';
+            
+            // 添加"全部"选项
+            const allCategory = document.createElement('div');
+            allCategory.className = 'category-card' + (currentCategory === null ? ' active' : '');
+            allCategory.innerHTML = `
+                <div class="category-name">${currentLanguage === 'en' ? 'All Categories' : '全部分类'}</div>
+                <div class="category-count">${categories.reduce((sum, cat) => sum + cat.count, 0)} tools</div>
+            `;
+            allCategory.onclick = () => selectCategory(null);
+            container.appendChild(allCategory);
+            
+            // 添加分类
+            categories.forEach(category => {
+                if (category.count > 0) {
+                    const categoryElement = document.createElement('div');
+                    categoryElement.className = 'category-card' + (currentCategory === category.id ? ' active' : '');
+                    categoryElement.innerHTML = `
+                        <div class="category-name">${category.name}</div>
+                        <div class="category-count">${category.count} ${currentLanguage === 'en' ? 'tools' : '工具'}</div>
+                    `;
+                    categoryElement.onclick = () => selectCategory(category.id);
+                    container.appendChild(categoryElement);
+                }
+            });
+        }
+
+        // 选择分类
+        function selectCategory(categoryId) {
+            currentCategory = categoryId;
+            currentPage = 1;
+            loadTools();
+            loadCategories(); // 重新渲染分类以更新选中状态
+        }
+
+        // 加载工具
+        async function loadTools() {
+            try {
+                const params = new URLSearchParams({
+                    language: currentLanguage,
+                    page: currentPage,
+                    limit: 6
+                });
+                
+                if (currentCategory) {
+                    params.append('category', currentCategory);
+                }
+                
+                const response = await fetch(`${API_BASE_URL}/api/tools?${params}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    renderTools(result.data);
+                    renderPagination(result.pagination);
+                } else {
+                    showError('Failed to load tools');
+                }
+            } catch (error) {
+                showError('Error loading tools: ' + error.message);
+            }
+        }
+
+        // 渲染工具
+        function renderTools(tools) {
+            const container = document.getElementById('toolsContainer');
+            container.innerHTML = '';
+            
+            if (tools.length === 0) {
+                container.innerHTML = `<div class="loading">${currentLanguage === 'en' ? 'No tools found' : '未找到工具'}</div>`;
+                return;
+            }
+            
+            tools.forEach(tool => {
+                const toolElement = document.createElement('div');
+                toolElement.className = 'tool-card';
+                toolElement.innerHTML = `
+                    <div class="tool-name">${tool.name}</div>
+                    <div class="tool-description">${tool.description}</div>
+                    <div class="tool-meta">
+                        <span class="tool-category">${tool.category_name}</span>
+                        <span class="tool-rating">★ ${tool.rating.toFixed(1)}</span>
+                    </div>
+                `;
+                toolElement.onclick = () => window.open(tool.url, '_blank');
+                container.appendChild(toolElement);
+            });
+        }
+
+        // 渲染分页
+        function renderPagination(pagination) {
+            const container = document.getElementById('pagination');
+            container.innerHTML = '';
+            
+            if (pagination.total_pages <= 1) return;
+            
+            // 上一页
+            if (pagination.page > 1) {
+                const prevButton = document.createElement('button');
+                prevButton.textContent = currentLanguage === 'en' ? 'Previous' : '上一页';
+                prevButton.onclick = () => {
+                    currentPage = pagination.page - 1;
+                    loadTools();
+                };
+                container.appendChild(prevButton);
+            }
+            
+            // 页码
+            for (let i = 1; i <= Math.min(pagination.total_pages, 5); i++) {
+                const pageButton = document.createElement('button');
+                pageButton.textContent = i;
+                pageButton.className = i === pagination.page ? 'active' : '';
+                pageButton.onclick = () => {
+                    currentPage = i;
+                    loadTools();
+                };
+                container.appendChild(pageButton);
+            }
+            
+            // 下一页
+            if (pagination.page < pagination.total_pages) {
+                const nextButton = document.createElement('button');
+                nextButton.textContent = currentLanguage === 'en' ? 'Next' : '下一页';
+                nextButton.onclick = () => {
+                    currentPage = pagination.page + 1;
+                    loadTools();
+                };
+                container.appendChild(nextButton);
+            }
+        }
+
+        // 显示错误
+        function showError(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.className = 'error';
+            errorDiv.textContent = message;
+            document.querySelector('.container').insertBefore(errorDiv, document.querySelector('.section'));
+            
+            setTimeout(() => {
+                errorDiv.remove();
+            }, 5000);
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            loadCategories();
+            loadTools();
+        });
+    </script>
+</body>
+</html>

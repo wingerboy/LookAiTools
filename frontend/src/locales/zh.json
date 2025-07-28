@@ -1,0 +1,239 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "search": "搜索",
+    "searchPlaceholder": "搜索AI工具...",
+    "viewDetail": "查看详情",
+    "learnMore": "了解更多",
+    "getStarted": "开始使用",
+    "tryNow": "立即试用",
+    "comingSoon": "即将推出",
+    "noData": "暂无数据",
+    "error": "发生错误",
+    "retry": "重试",
+    "featured": "精选",
+    "viewDetails": "查看详情",
+    "visitSite": "访问网站"
+  },
+  "navigation": {
+    "home": "首页",
+    "categories": "分类",
+    "chat": "AI助手",
+    "submit": "提交工具",
+    "language": "语言"
+  },
+  "footer": {
+    "title": "Look AI Tools",
+    "subtitle": "发现最适合您需求的AI工具",
+    "quickLinks": "快速链接",
+    "categories": "分类",
+    "resources": "资源",
+    "support": "支持",
+    "about": "关于我们",
+    "contact": "联系我们",
+    "privacy": "隐私政策",
+    "terms": "服务条款",
+    "copyright": "© 2024 Look AI Tools. 保留所有权利。"
+  },
+  "home": {
+    "hero": {
+      "title": "发现最佳AI工具",
+      "subtitle": "寻找和探索前沿AI工具，提升您的生产力和创造力",
+      "searchPlaceholder": "搜索AI工具、分类或用例..."
+    },
+    "featured": {
+      "title": "精选AI工具",
+      "subtitle": "精心挑选在AI社区中备受瞩目的工具"
+    },
+    "categories": {
+      "title": "按分类浏览",
+      "subtitle": "查找按主要用途分类的AI工具"
+    },
+    "stats": {
+      "tools": "AI工具",
+      "categories": "分类",
+      "users": "满意用户"
+    }
+  },
+  "search": {
+    "title": "搜索结果",
+    "subtitle": "找到满足您需求的完美AI工具",
+    "noResults": "未找到匹配您搜索的工具",
+    "tryDifferent": "尝试不同的关键词或浏览我们的分类",
+    "resultsFor": "搜索结果",
+    "filters": "筛选",
+    "sortBy": "排序方式",
+    "relevance": "相关性",
+    "newest": "最新",
+    "popular": "最受欢迎"
+  },
+  "categories": {
+    "title": "AI工具分类",
+    "subtitle": "按分类探索AI工具",
+    "allCategories": "所有分类",
+    "subcategories": "子分类",
+    "tags": "热门标签",
+    "toolsInCategory": "个工具在此分类中",
+    "noToolsInCategory": "此分类中未找到工具",
+    "noToolsFound": "未找到工具",
+    "tryAdjusting": "尝试调整您的搜索词或筛选条件",
+    "clearAllFilters": "清除所有筛选",
+    "activeFilters": "活跃筛选:",
+    "clearAll": "清除全部",
+    "previous": "上一页",
+    "next": "下一页",
+    "showing": "显示",
+    "to": "到",
+    "of": "共",
+    "results": "条结果"
+  },
+  "submit": {
+    "title": "提交AI工具",
+    "subtitle": "与我们的社区分享您的AI工具，帮助其他人发现创新解决方案",
+    "sections": {
+      "basicInfo": "基本信息",
+      "basicInfoDesc": "关于您的AI工具的基本详情",
+      "description": "描述和详情",
+      "descriptionDesc": "关于您工具功能的详细信息",
+      "categorization": "分类信息",
+      "categorizationDesc": "通过正确分类帮助用户找到您的工具",
+      "features": "功能和用例",
+      "featuresDesc": "突出您工具的特色功能",
+      "pricing": "定价信息",
+      "pricingDesc": "让用户了解您的定价模式",
+      "contact": "联系信息",
+      "contactDesc": "我们如何联系您进行验证和更新"
+    },
+    "fields": {
+      "name": "工具名称",
+      "title": "工具标题",
+      "url": "网站链接",
+      "thumbnail": "缩略图链接",
+      "shortDescription": "简短描述",
+      "longDescription": "详细描述",
+      "category": "主要分类",
+      "subcategory": "子分类",
+      "tags": "标签",
+      "industryTags": "行业标签",
+      "keyFeatures": "核心功能",
+      "useCases": "使用场景",
+      "targetAudience": "目标用户",
+      "pricingType": "定价类型",
+      "pricingDetails": "定价详情",
+      "trialAvailable": "试用情况",
+      "contactName": "联系人姓名",
+      "contactEmail": "联系邮箱",
+      "companyName": "公司名称"
+    },
+    "placeholders": {
+      "nameEn": "Enter tool name in English",
+      "nameZh": "输入中文工具名称",
+      "titleEn": "Enter descriptive title in English",
+      "titleZh": "输入中文描述性标题",
+      "descriptionEn": "Brief description of what your tool does",
+      "descriptionZh": "简要描述您的工具功能",
+      "longDescriptionEn": "Detailed explanation of features and benefits",
+      "longDescriptionZh": "详细说明功能和优势",
+      "selectCategory": "选择分类",
+      "subcategoryEn": "e.g., Text Generation, Image Editing",
+      "subcategoryZh": "例如：文本生成、图像编辑",
+      "useCasesEn": "Describe common use cases and applications",
+      "useCasesZh": "描述常见用例和应用场景",
+      "targetAudienceEn": "Who is this tool designed for?",
+      "targetAudienceZh": "这个工具是为谁设计的？",
+      "selectPricingType": "选择定价模式",
+      "pricingDetailsEn": "Provide specific pricing information",
+      "pricingDetailsZh": "提供具体的定价信息",
+      "selectTrialAvailable": "是否提供试用？",
+      "contactName": "您的姓名",
+      "contactEmail": "your.email@example.com",
+      "companyName": "您的公司或组织"
+    },
+    "actions": {
+      "addTag": "添加标签",
+      "addIndustryTag": "添加行业标签",
+      "addFeature": "添加功能",
+      "cancel": "取消",
+      "submit": "提交工具",
+      "submitting": "提交中..."
+    },
+    "hints": {
+      "thumbnail": "推荐尺寸：400x300px。如果未提供，我们将自动生成。"
+    },
+    "disclaimer": {
+      "review": "所有提交的内容都会在发布前进行审核。",
+      "approval": "工具通过审核后，您将收到邮件通知。"
+    },
+    "errors": {
+      "required": "此字段为必填项",
+      "invalidUrl": "请输入有效的网址",
+      "invalidEmail": "请输入有效的邮箱地址",
+      "submitFailed": "提交失败，请重试。",
+      "loadingFailed": "加载表单数据失败，请重试。"
+    },
+    "success": {
+      "title": "工具提交成功！",
+      "message": "感谢您提交AI工具。我们将在2-3个工作日内审核并回复您。",
+      "backHome": "返回首页"
+    }
+  },
+  "toolDetail": {
+    "overview": "概述",
+    "features": "功能",
+    "pricing": "定价",
+    "reviews": "评价",
+    "alternatives": "替代方案",
+    "visitWebsite": "访问网站",
+    "addToFavorites": "添加到收藏",
+    "share": "分享",
+    "report": "举报",
+    "lastUpdated": "最后更新",
+    "category": "分类",
+    "tags": "标签"
+  },
+  "chat": {
+    "title": "AI助手",
+    "subtitle": "获取个性化AI工具推荐",
+    "placeholder": "描述您的需求，AI助手帮您找到完美工具...",
+    "send": "发送",
+    "thinking": "思考中...",
+    "suggestions": "建议问题：",
+    "examples": [
+      "我需要一个内容写作的AI工具",
+      "最好的AI图像生成器是什么？",
+      "为我找一些生产力AI工具",
+      "我在寻找免费的AI工具"
+    ]
+  },
+  "submit": {
+    "title": "提交您的AI工具",
+    "subtitle": "与我们的社区分享您的AI工具",
+    "form": {
+      "toolName": "工具名称",
+      "toolUrl": "工具网址",
+      "description": "描述",
+      "category": "分类",
+      "tags": "标签",
+      "submit": "提交工具",
+      "submitting": "提交中...",
+      "success": "工具提交成功！",
+      "error": "提交工具失败，请重试。"
+    }
+  },
+  "tool": {
+    "keyFeatures": "核心功能",
+    "about": "关于",
+    "useCases": "使用场景",
+    "try": "试用",
+    "startUsing": "立即开始使用这个AI工具",
+    "information": "工具信息",
+    "category": "分类",
+    "pricing": "定价",
+    "rating": "评分",
+    "views": "浏览量",
+    "added": "添加时间",
+    "lastUpdated": "最后更新",
+    "relatedTools": "相关工具",
+    "relatedToolsSubtitle": "您可能感兴趣的其他AI工具"
+  }
+}

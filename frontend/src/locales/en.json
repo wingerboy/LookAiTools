@@ -1,0 +1,247 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "search": "Search",
+    "searchPlaceholder": "Search AI tools...",
+    "viewDetail": "View Detail",
+    "learnMore": "Learn More",
+    "getStarted": "Get Started",
+    "tryNow": "Try Now",
+    "comingSoon": "Coming Soon",
+    "noData": "No data available",
+    "error": "An error occurred",
+    "retry": "Retry",
+    "featured": "Featured",
+    "viewDetails": "View Details",
+    "visitSite": "Visit Site"
+  },
+  "navigation": {
+    "home": "Home",
+    "categories": "Categories",
+    "chat": "AI Assistant",
+    "submit": "Submit Tool",
+    "language": "Language"
+  },
+  "footer": {
+    "title": "Look AI Tools",
+    "subtitle": "Discover the best AI tools for your needs",
+    "quickLinks": "Quick Links",
+    "categories": "Categories",
+    "resources": "Resources",
+    "support": "Support",
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "© 2024 Look AI Tools. All rights reserved."
+  },
+  "home": {
+    "hero": {
+      "title": "Discover the Best AI Tools",
+      "subtitle": "Find and explore cutting-edge AI tools to boost your productivity and creativity",
+      "searchPlaceholder": "Search for AI tools, categories, or use cases..."
+    },
+    "featured": {
+      "title": "Featured AI Tools",
+      "subtitle": "Handpicked tools that are making waves in the AI community"
+    },
+    "latest": {
+      "title": "Latest AI Tools",
+      "subtitle": "Recently added tools to our directory"
+    },
+    "popular": {
+      "title": "Popular This Week",
+      "subtitle": "Most visited and trending AI tools"
+    },
+    "categories": {
+      "title": "Browse by Category",
+      "subtitle": "Find AI tools organized by their primary use cases"
+    },
+    "stats": {
+      "tools": "AI Tools",
+      "categories": "Categories",
+      "users": "Happy Users"
+    }
+  },
+  "search": {
+    "title": "Search Results",
+    "subtitle": "Find the perfect AI tool for your needs",
+    "noResults": "No tools found matching your search",
+    "tryDifferent": "Try different keywords or browse our categories",
+    "resultsFor": "Results for",
+    "filters": "Filters",
+    "sortBy": "Sort by",
+    "relevance": "Relevance",
+    "newest": "Newest",
+    "popular": "Most Popular"
+  },
+  "categories": {
+    "title": "AI Tool Categories",
+    "subtitle": "Explore AI tools organized by category",
+    "allCategories": "All Categories",
+    "subcategories": "Subcategories",
+    "tags": "Popular Tags",
+    "toolsInCategory": "tools in this category",
+    "noToolsInCategory": "No tools found in this category",
+    "noToolsFound": "No tools found",
+    "tryAdjusting": "Try adjusting your search terms or filters",
+    "clearAllFilters": "Clear all filters",
+    "activeFilters": "Active filters:",
+    "clearAll": "Clear all",
+    "previous": "Previous",
+    "next": "Next",
+    "showing": "Showing",
+    "to": "to",
+    "of": "of",
+    "results": "results"
+  },
+  "submit": {
+    "title": "Submit AI Tool",
+    "subtitle": "Share your AI tool with our community and help others discover innovative solutions",
+    "sections": {
+      "basicInfo": "Basic Information",
+      "basicInfoDesc": "Essential details about your AI tool",
+      "description": "Description & Details",
+      "descriptionDesc": "Detailed information about your tool's functionality",
+      "categorization": "Categorization",
+      "categorizationDesc": "Help users find your tool by categorizing it properly",
+      "features": "Features & Use Cases",
+      "featuresDesc": "Highlight what makes your tool special",
+      "pricing": "Pricing Information",
+      "pricingDesc": "Let users know about your pricing model",
+      "contact": "Contact Information",
+      "contactDesc": "How we can reach you for verification and updates"
+    },
+    "fields": {
+      "name": "Tool Name",
+      "title": "Tool Title",
+      "url": "Website URL",
+      "thumbnail": "Thumbnail Image URL",
+      "shortDescription": "Short Description",
+      "longDescription": "Detailed Description",
+      "category": "Primary Category",
+      "subcategory": "Subcategory",
+      "tags": "Tags",
+      "industryTags": "Industry Tags",
+      "keyFeatures": "Key Features",
+      "useCases": "Use Cases",
+      "targetAudience": "Target Audience",
+      "pricingType": "Pricing Type",
+      "pricingDetails": "Pricing Details",
+      "trialAvailable": "Trial Available",
+      "contactName": "Contact Name",
+      "contactEmail": "Contact Email",
+      "companyName": "Company Name"
+    },
+    "placeholders": {
+      "nameEn": "Enter tool name in English",
+      "nameZh": "输入中文工具名称",
+      "titleEn": "Enter descriptive title in English",
+      "titleZh": "输入中文描述性标题",
+      "descriptionEn": "Brief description of what your tool does",
+      "descriptionZh": "简要描述您的工具功能",
+      "longDescriptionEn": "Detailed explanation of features and benefits",
+      "longDescriptionZh": "详细说明功能和优势",
+      "selectCategory": "Select a category",
+      "subcategoryEn": "e.g., Text Generation, Image Editing",
+      "subcategoryZh": "例如：文本生成、图像编辑",
+      "useCasesEn": "Describe common use cases and applications",
+      "useCasesZh": "描述常见用例和应用场景",
+      "targetAudienceEn": "Who is this tool designed for?",
+      "targetAudienceZh": "这个工具是为谁设计的？",
+      "selectPricingType": "Select pricing model",
+      "pricingDetailsEn": "Provide specific pricing information",
+      "pricingDetailsZh": "提供具体的定价信息",
+      "selectTrialAvailable": "Is there a trial available?",
+      "contactName": "Your full name",
+      "contactEmail": "your.email@example.com",
+      "companyName": "Your company or organization"
+    },
+    "actions": {
+      "addTag": "Add Tag",
+      "addIndustryTag": "Add Industry Tag",
+      "addFeature": "Add Feature",
+      "cancel": "Cancel",
+      "submit": "Submit Tool",
+      "submitting": "Submitting..."
+    },
+    "hints": {
+      "thumbnail": "Recommended size: 400x300px. We'll automatically generate one if not provided."
+    },
+    "disclaimer": {
+      "review": "All submissions are reviewed before being published.",
+      "approval": "You'll receive an email notification once your tool is approved."
+    },
+    "errors": {
+      "required": "This field is required",
+      "invalidUrl": "Please enter a valid URL",
+      "invalidEmail": "Please enter a valid email address",
+      "submitFailed": "Failed to submit tool. Please try again.",
+      "loadingFailed": "Failed to load form data. Please try again."
+    },
+    "success": {
+      "title": "Tool Submitted Successfully!",
+      "message": "Thank you for submitting your AI tool. We'll review it and get back to you within 2-3 business days.",
+      "backHome": "Back to Home"
+    }
+  },
+  "toolDetail": {
+    "overview": "Overview",
+    "features": "Features",
+    "pricing": "Pricing",
+    "reviews": "Reviews",
+    "alternatives": "Alternatives",
+    "visitWebsite": "Visit Website",
+    "addToFavorites": "Add to Favorites",
+    "share": "Share",
+    "report": "Report",
+    "lastUpdated": "Last updated",
+    "category": "Category",
+    "tags": "Tags"
+  },
+  "chat": {
+    "title": "AI Assistant",
+    "subtitle": "Get personalized AI tool recommendations",
+    "placeholder": "Describe what you're looking for...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "suggestions": "Suggested questions:",
+    "examples": [
+      "I need an AI tool for content writing",
+      "What's the best AI image generator?",
+      "Find me productivity AI tools",
+      "I'm looking for free AI tools"
+    ]
+  },
+  "submit": {
+    "title": "Submit Your AI Tool",
+    "subtitle": "Share your AI tool with our community",
+    "form": {
+      "toolName": "Tool Name",
+      "toolUrl": "Tool URL",
+      "description": "Description",
+      "category": "Category",
+      "tags": "Tags",
+      "submit": "Submit Tool",
+      "submitting": "Submitting...",
+      "success": "Tool submitted successfully!",
+      "error": "Failed to submit tool. Please try again."
+    }
+  },
+  "tool": {
+    "keyFeatures": "Key Features",
+    "about": "About",
+    "useCases": "Use Cases",
+    "try": "Try",
+    "startUsing": "Start using this AI tool today",
+    "information": "Tool Information",
+    "category": "Category",
+    "pricing": "Pricing",
+    "rating": "Rating",
+    "views": "Views",
+    "added": "Added",
+    "lastUpdated": "Last Updated",
+    "relatedTools": "Related Tools",
+    "relatedToolsSubtitle": "Other AI tools you might find useful"
+  }
+}
