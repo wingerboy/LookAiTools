@@ -98,7 +98,7 @@ export default function ToolCard({ tool, className }: ToolCardProps) {
           {/* Quick Action Overlay - Hidden on mobile */}
           <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity duration-300 hidden md:flex items-center justify-center">
             <div className="flex space-x-2">
-              <Link to={`/tools/${tool.full_data?.slug || tool.id}`}>
+              <Link to={`/tools/${tool.slug || tool.id}`}>
                 <Button size="sm" variant="secondary">
                   {t('common.viewDetails')}
                   <ArrowRight className="ml-2 h-3 w-3" />
@@ -125,7 +125,7 @@ export default function ToolCard({ tool, className }: ToolCardProps) {
         <div className="p-6 relative">
           <div className="space-y-3">
             {/* Title */}
-            <Link to={`/tools/${tool.full_data?.slug || tool.id}`}>
+            <Link to={`/tools/${tool.slug || tool.id}`}>
               <h3 className="font-semibold text-lg leading-tight hover:text-primary transition-colors line-clamp-2">
                 {tool.full_data?.title ? getBilingualText(tool.full_data.title, i18n.language) : tool.title}
               </h3>

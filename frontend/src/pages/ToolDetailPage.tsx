@@ -179,17 +179,17 @@ export default function ToolDetailPage() {
             </div>
 
             {/* Features Section */}
-            {tool.full_data?.key_features && tool.full_data.key_features.length > 0 && (
+            {((tool.key_features && tool.key_features.length > 0) || (tool.full_data?.key_features && tool.full_data.key_features.length > 0)) && (
               <Card>
                 <CardHeader>
                   <CardTitle>{t('tool.keyFeatures', 'Key Features')}</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-2">
-                    {tool.full_data.key_features.map((feature, index) => (
+                    {(tool.key_features || tool.full_data?.key_features || []).map((feature, index) => (
                       <li key={index} className="flex items-center">
                         <div className="w-2 h-2 bg-primary rounded-full mr-3" />
-                        {getBilingualText(feature, i18n.language)}
+                        {typeof feature === 'string' ? feature : getBilingualText(feature, i18n.language)}
                       </li>
                     ))}
                   </ul>
@@ -198,7 +198,7 @@ export default function ToolDetailPage() {
             )}
 
             {/* Long Description */}
-            {tool.full_data?.long_description && (
+            {(tool.long_description || tool.full_data?.long_description) && (
               <Card>
                 <CardHeader>
                   <CardTitle>
@@ -207,22 +207,47 @@ export default function ToolDetailPage() {
                 </CardHeader>
                 <CardContent>
                   <p className="text-muted-foreground leading-relaxed">
-                    {getBilingualText(tool.full_data.long_description, i18n.language)}
+                    {tool.long_description || getBilingualText(tool.full_data?.long_description, i18n.language)}
                   </p>
                 </CardContent>
               </Card>
             )}
 
-            {/* Use Cases */}
-            {tool.full_data?.use_cases && (
+            {/* Use Cases - 整合Target Audience和Industry Tags */}
+            {(tool.use_cases || tool.full_data?.use_cases || tool.target_audience || tool.full_data?.target_audience || (tool.industry_tags && tool.industry_tags.length > 0)) && (
               <Card>
                 <CardHeader>
-                  <CardTitle>{t('tool.useCases', 'Use Cases')}</CardTitle>
+                  <div className="flex items-center gap-2">
+                    <CardTitle>{t('tool.useCases', 'Use Cases')}</CardTitle>
+                    {/* Industry Tags 显示在标题后面 */}
+                    {tool.industry_tags && tool.industry_tags.length > 0 && (
+                      <div className="flex flex-wrap gap-1">
+                        {tool.industry_tags.map((tag, index) => (
+                          <Badge key={index} variant="outline" className="bg-blue-50 text-blue-700 border-blue-200 text-xs">
+                            {tag}
+                          </Badge>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground leading-relaxed">
-                    {getBilingualText(tool.full_data.use_cases, i18n.language)}
-                  </p>
+                <CardContent className="space-y-3">
+                  {/* Use Cases 内容 */}
+                  {(tool.use_cases || tool.full_data?.use_cases) && (
+                    <p className="text-muted-foreground leading-relaxed">
+                      {tool.use_cases || getBilingualText(tool.full_data?.use_cases, i18n.language)}
+                    </p>
+                  )}
+                  
+                  {/* Target Audience 内容显示在下方 */}
+                  {(tool.target_audience || tool.full_data?.target_audience) && (
+                    <div className="mt-4 pt-3 border-t border-border/50">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        <span className="font-medium text-foreground"></span>
+                        {tool.target_audience || getBilingualText(tool.full_data?.target_audience, i18n.language)}
+                      </p>
+                    </div>
+                  )}
                 </CardContent>
               </Card>
             )}
@@ -266,7 +291,23 @@ export default function ToolDetailPage() {
                   <div className="text-sm text-muted-foreground capitalize">
                     {tool.category.replace('-', ' ')}
                   </div>
+                  {tool.category_description && (
+                    <div className="text-xs text-muted-foreground mt-1">
+                      {tool.category_description}
+                    </div>
+                  )}
                 </div>
+                {tool.subcategory && (
+                  <>
+                    <Separator />
+                    <div>
+                      <div className="text-sm font-medium">{t('tool.subcategory', 'Subcategory')}</div>
+                      <div className="text-sm text-muted-foreground">
+                        {tool.subcategory}
+                      </div>
+                    </div>
+                  </>
+                )}
                 <Separator />
                 <div>
                   <div className="text-sm font-medium">{t('tool.pricing', 'Pricing')}</div>
@@ -275,29 +316,29 @@ export default function ToolDetailPage() {
                   </div>
                 </div>
                 <Separator />
-                {tool.full_data?.rating && tool.full_data.rating > 0 && (
+                {(tool.rating && tool.rating > 0) || (tool.full_data?.rating && tool.full_data.rating > 0) ? (
                   <>
                     <div>
                       <div className="text-sm font-medium">{t('tool.rating', 'Rating')}</div>
                       <div className="text-sm text-muted-foreground flex items-center gap-1">
                         <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                        {tool.full_data.rating.toFixed(1)}
+                        {(tool.rating || tool.full_data?.rating || 0).toFixed(1)}
                       </div>
                     </div>
                     <Separator />
                   </>
-                )}
-                {tool.full_data?.view_count && tool.full_data.view_count > 0 && (
+                ) : null}
+                {(tool.traffic && tool.traffic > 0) || (tool.full_data?.view_count && tool.full_data.view_count > 0) ? (
                   <>
                     <div>
-                      <div className="text-sm font-medium">{t('tool.views', 'Views')}</div>
+                      <div className="text-sm font-medium">{t('tool.views', 'Views/Traffic')}</div>
                       <div className="text-sm text-muted-foreground">
-                        {tool.full_data.view_count.toLocaleString()}
+                        {(tool.traffic || tool.full_data?.view_count || 0).toLocaleString()}
                       </div>
                     </div>
                     <Separator />
                   </>
-                )}
+                ) : null}
                 <div>
                   <div className="text-sm font-medium">{t('tool.added', 'Added')}</div>
                   <div className="text-sm text-muted-foreground">

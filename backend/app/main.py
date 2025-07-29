@@ -79,13 +79,13 @@ def format_tool_response(tool_row: Dict, language: str = 'en') -> Dict:
         # 检查是否是完整URL
         if not screenshot.startswith(('http://', 'https://')):
             # 从环境变量获取基础URL
-            base_url = os.getenv('FRONTEND_IMAGE_BASE_URL', '/screenshots')
-            if base_url.startswith('/'):
-                # 本地路径，转换为相对URL
-                screenshot = f"/api/images/{screenshot}"
+            base_url = os.getenv('FRONTEND_IMAGE_BASE_URL', '/Users/wingerliu/Downloads/startups/LookAiTools/crawler/screenshots')
+            if base_url.startswith('@'):
+                # S3或其他远程URL (以@开头表示远程)
+                screenshot = f"{base_url[1:].rstrip('/')}/{screenshot}"
             else:
-                # S3或其他URL
-                screenshot = f"{base_url.rstrip('/')}/{screenshot}"
+                # 本地路径，转换为API URL
+                screenshot = f"/api/images/{screenshot}"
 
     return {
         "id": tool_row.get('id'),
@@ -316,6 +316,65 @@ async def get_tool(tool_identifier: str, language: str = Query("en", description
         raise
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"获取工具详情失败: {str(e)}")
+
+@app.get("/api/tools/{tool_identifier}/related")
+async def get_related_tools(
+    tool_identifier: str, 
+    language: str = Query("en", description="语言"),
+    limit: int = Query(4, description="返回数量限制")
+):
+    """获取相关工具 - 基于分类和标签"""
+    try:
+        # 标准化语言代码
+        language = normalize_language_code(language)
+        pool = await get_db_connection()
+        async with pool.acquire() as conn:
+            # 首先获取当前工具的信息
+            tool_query = """
+                SELECT id, category_id
+                FROM tools
+                WHERE (slug = $1 OR id::text = $1) AND status = 'active'
+            """
+            current_tool = await conn.fetchrow(tool_query, tool_identifier)
+            
+            if not current_tool:
+                raise HTTPException(status_code=404, detail="工具不存在")
+            
+            # 查询同类别的其他工具（排除当前工具）
+            related_query = """
+                SELECT
+                    t.id, t.slug, t.url, t.page_screenshot, t.rating, t.view_count,
+                    t.pricing_type, t.featured, t.created_at, t.updated_at,
+                    c.category_key,
+                    ct.category_name,
+                    tt.name as name,
+                    tt.title as title,
+                    tt.description as description
+                FROM tools t
+                LEFT JOIN categories c ON t.category_id = c.id
+                LEFT JOIN tool_translations tt ON t.id = tt.tool_id AND tt.language_code = $1
+                LEFT JOIN category_translations ct ON c.id = ct.category_id AND ct.language_code = $1
+                WHERE t.category_id = $2 
+                  AND t.id != $3 
+                  AND t.status = 'active'
+                ORDER BY t.rating DESC, t.view_count DESC
+                LIMIT $4
+            """
+            
+            rows = await conn.fetch(related_query, language, current_tool['category_id'], current_tool['id'], limit)
+            
+            # 格式化响应
+            related_tools = []
+            for row in rows:
+                tool_data = dict(row)
+                related_tools.append(format_tool_response(tool_data, language))
+            
+            return APIResponse(data=related_tools)
+            
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"获取相关工具失败: {str(e)}")
 
 @app.get("/api/categories")
 async def get_categories(language: str = Query("en", description="语言")):

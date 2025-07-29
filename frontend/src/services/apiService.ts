@@ -20,9 +20,47 @@ class APIService {
       }
 
       const data = await response.json()
+      
+      // 如果后端返回的不是标准APIResponse格式，我们包装一下
+      if (typeof data === 'object' && !data.hasOwnProperty('success')) {
+        // 修复工具数据的字段映射
+        if (data.data && Array.isArray(data.data)) {
+          data.data = data.data.map((tool: any) => ({
+            ...tool,
+            // 映射字段名称
+            pricing: tool.pricing_type || tool.pricing || 'unknown',
+            rating: tool.rating || 4.5,
+            traffic: tool.traffic || tool.view_count || 0,
+            slug: tool.slug // 确保slug被正确映射
+          }))
+        } else if (data.data && typeof data.data === 'object') {
+          // 单个工具对象的映射
+          data.data = {
+            ...data.data,
+            pricing: data.data.pricing_type || data.data.pricing || 'unknown',
+            rating: data.data.rating || 4.5,
+            traffic: data.data.traffic || data.data.view_count || 0,
+            slug: data.data.slug
+          }
+        }
+        
+        return {
+          success: true,
+          data: data.data || data,
+          pagination: data.pagination || null,
+          message: 'Success'
+        }
+      }
+      
       return data
     } catch (error) {
       console.error('API request failed:', error)
+      
+      // 增强错误信息
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        throw new Error(`网络连接失败: 无法连接到服务器 ${API_BASE_URL}. 请检查后端服务是否启动。`)
+      }
+      
       throw error
     }
   }
@@ -66,7 +104,16 @@ class APIService {
   }
 
   async getFeaturedTools(language: string = 'en'): Promise<APIResponse<AITool[]>> {
-    return this.request<AITool[]>(`/api/tools?featured=true&limit=8&language=${language}&minimal=true`)
+    // 如果没有featured工具，则返回最新的8个工具
+    const featuredResponse = await this.request<AITool[]>(`/api/tools?featured=true&limit=8&language=${language}&minimal=true`)
+    
+    if (featuredResponse.success && featuredResponse.data.length > 0) {
+      return featuredResponse
+    }
+    
+    // 如果没有featured工具，获取最新工具作为featured
+    console.log('No featured tools found, using latest tools instead')
+    return this.request<AITool[]>(`/api/tools?limit=8&language=${language}&minimal=true`)
   }
 
   async getLatestTools(language: string = 'en'): Promise<APIResponse<AITool[]>> {

@@ -25,9 +25,9 @@ export default function HomePage() {
     limit: 8
   })
 
-  // 移除严格的错误处理，让页面始终能够渲染
-
-
+  // 错误处理 - 显示错误信息以便调试
+  const hasErrors = categoriesError || featuredError || latestError || popularError || categoryError;
+  const allErrors = [categoriesError, featuredError, latestError, popularError, categoryError].filter(Boolean);
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -45,6 +45,18 @@ export default function HomePage() {
         <div className="absolute top-40 left-1/3 w-32 h-32 bg-gradient-to-br from-warning/30 to-accent/30 rounded-full blur-2xl animate-float" style={{animationDelay: '2s'}}></div>
         <div className="absolute bottom-40 right-1/3 w-48 h-48 bg-gradient-to-br from-success/20 to-primary/20 rounded-full blur-3xl animate-float" style={{animationDelay: '4s'}}></div>
       </div>
+
+      {/* 错误提示 - 调试用 */}
+      {hasErrors && (
+        <div className="relative z-20 bg-red-600/90 text-white p-4 m-4 rounded-lg">
+          <h3 className="font-bold mb-2">调试信息 - 数据加载错误:</h3>
+          <ul className="text-sm space-y-1">
+            {allErrors.map((error, index) => (
+              <li key={index}>• {error}</li>
+            ))}
+          </ul>
+        </div>
+      )}
 
       {/* Hero Section */}
       <HeroSection />

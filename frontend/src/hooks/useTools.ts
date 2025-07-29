@@ -42,14 +42,16 @@ export function useTools(params: {
           setPagination(response.pagination)
         }
       } else {
-        // 对于API响应错误，只记录警告，不设置错误状态
-        console.warn('API response error:', response.message)
-        setTools([]) // 设置空数组而不是错误状态
+        // 设置错误状态以便调试
+        console.error('API response error:', response.message)
+        setError(response.message || 'API响应错误')
+        setTools([])
       }
     } catch (err) {
-      // 对于网络错误，只记录警告，不设置错误状态
-      console.warn('Network error (non-blocking):', err)
-      setTools([]) // 设置空数组而不是错误状态
+      // 设置错误状态以便调试
+      console.error('Network error:', err)
+      setError(err instanceof Error ? err.message : '网络错误')
+      setTools([])
     } finally {
       setLoading(false)
     }
@@ -96,11 +98,13 @@ export function useFeaturedTools() {
         if (response.success) {
           setTools(response.data)
         } else {
-          console.warn('Featured tools API error:', response.message)
+          console.error('Featured tools API error:', response.message)
+          setError(response.message || 'API响应错误')
           setTools([])
         }
       } catch (err) {
-        console.warn('Featured tools network error (non-blocking):', err)
+        console.error('Featured tools network error:', err)
+        setError(err instanceof Error ? err.message : '网络错误')
         setTools([])
       } finally {
         setLoading(false)
@@ -131,11 +135,13 @@ export function useLatestTools() {
         if (response.success) {
           setTools(response.data)
         } else {
-          console.warn('Latest tools API error:', response.message)
+          console.error('Latest tools API error:', response.message)
+          setError(response.message || 'API响应错误')
           setTools([])
         }
       } catch (err) {
-        console.warn('Latest tools network error (non-blocking):', err)
+        console.error('Latest tools network error:', err)
+        setError(err instanceof Error ? err.message : '网络错误')
         setTools([])
       } finally {
         setLoading(false)
@@ -166,11 +172,13 @@ export function usePopularTools() {
         if (response.success) {
           setTools(response.data)
         } else {
-          console.warn('Popular tools API error:', response.message)
+          console.error('Popular tools API error:', response.message)
+          setError(response.message || 'API响应错误')
           setTools([])
         }
       } catch (err) {
-        console.warn('Popular tools network error (non-blocking):', err)
+        console.error('Popular tools network error:', err)
+        setError(err instanceof Error ? err.message : '网络错误')
         setTools([])
       } finally {
         setLoading(false)
@@ -273,11 +281,13 @@ export function useCategories() {
         if (response.success) {
           setCategories(response.data)
         } else {
-          console.warn('Categories API error:', response.message)
+          console.error('Categories API error:', response.message)
+          setError(response.message || 'API响应错误')
           setCategories([])
         }
       } catch (err) {
-        console.warn('Categories network error (non-blocking):', err)
+        console.error('Categories network error:', err)
+        setError(err instanceof Error ? err.message : '网络错误')
         setCategories([])
       } finally {
         setLoading(false)

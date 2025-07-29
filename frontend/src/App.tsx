@@ -10,8 +10,8 @@ import ToolDetailPage from '@/pages/ToolDetailPage'
 import DemoPage from '@/pages/DemoPage'
 import ChatPage from '@/pages/ChatPage'
 import SubmitToolPage from '@/pages/SubmitToolPage'
-import PerformanceTestPage from '@/pages/PerformanceTestPage'
-import TestPage from '@/pages/TestPage'
+import DebugPage from '@/pages/DebugPage'
+
 
 
 
@@ -39,8 +39,8 @@ function App() {
                 <Route path="/tools/:slug" element={<ToolDetailPage />} />
                 <Route path="/demo" element={<DemoPage />} />
                 <Route path="/chat" element={<ChatPage />} />
-                <Route path="/performance-test" element={<PerformanceTestPage />} />
-                <Route path="/test" element={<TestPage />} />
+                <Route path="/debug" element={<DebugPage />} />
+
 
 
 

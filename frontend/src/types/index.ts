@@ -7,6 +7,7 @@ export interface BilingualText {
 // AI工具接口 - 兼容数据库结构
 export interface AITool {
   id: string;
+  slug?: string; // 工具的URL友好标识符
   name: string; // 简化的名称（当前语言）
   title: string; // 简化的标题（当前语言）
   description: string; // 简化的描述（当前语言）
@@ -16,9 +17,18 @@ export interface AITool {
   tags?: string[]; // 简化的标签数组（当前语言）
   pricing: 'free' | 'freemium' | 'paid' | 'unknown';
   featured: boolean;
+  rating?: number;
   traffic?: number;
   created_at: string;
   updated_at: string;
+  // 详情页额外字段
+  long_description?: string;
+  use_cases?: string;
+  target_audience?: string;
+  subcategory?: string;
+  industry_tags?: string[];
+  key_features?: string[];
+  category_description?: string;
   // 完整的双语数据（可选，用于详情页面）
   full_data?: {
     name: BilingualText;
