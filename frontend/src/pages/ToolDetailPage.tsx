@@ -121,11 +121,27 @@ export default function ToolDetailPage() {
             {/* Hero Section */}
             <div className="space-y-6">
               <div className="aspect-video rounded-lg overflow-hidden bg-muted">
-                <img
-                  src={tool.thumbnail_url}
-                  alt={tool.title}
-                  className="w-full h-full object-cover"
-                />
+                {tool.thumbnail_url ? (
+                  <img
+                    src={tool.thumbnail_url}
+                    alt={tool.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.error('Image load error:', tool.thumbnail_url);
+                      // 设置fallback图片或显示占位符
+                      (e.target as HTMLImageElement).style.display = 'none';
+                    }}
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                    <div className="text-center">
+                      <div className="w-16 h-16 mx-auto mb-4 bg-muted-foreground/10 rounded-lg flex items-center justify-center">
+                        📷
+                      </div>
+                      <p className="text-sm">No preview available</p>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div className="space-y-4">

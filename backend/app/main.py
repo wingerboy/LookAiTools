@@ -84,8 +84,9 @@ def format_tool_response(tool_row: Dict, language: str = 'en') -> Dict:
                 # S3或其他远程URL (以@开头表示远程)
                 screenshot = f"{base_url[1:].rstrip('/')}/{screenshot}"
             else:
-                # 本地路径，转换为API URL
-                screenshot = f"/api/images/{screenshot}"
+                # 本地路径，转换为完整的API URL
+                api_base_url = os.getenv('API_BASE_URL', 'http://localhost:8000')
+                screenshot = f"{api_base_url}/api/images/{screenshot}"
 
     return {
         "id": tool_row.get('id'),
@@ -163,6 +164,21 @@ async def get_tools(
                 where_conditions.append(f"c.category_key = ${param_count}")
                 params.append(category)
 
+            # 标签筛选
+            if tags:
+                tag_list = [tag.strip() for tag in tags.split(',') if tag.strip()]
+                if tag_list:
+                    param_count += 1
+                    where_conditions.append(f"""
+                        t.id IN (
+                            SELECT DISTINCT tool_tags.tool_id 
+                            FROM tool_tags 
+                            JOIN tags ON tool_tags.tag_id = tags.id 
+                            WHERE tags.tag_key = ANY(${param_count})
+                        )
+                    """)
+                    params.append(tag_list)
+
             # 精选筛选
             if featured and featured.lower() in ['true', '1']:
                 where_conditions.append("t.featured = true")
@@ -178,6 +194,9 @@ async def get_tools(
                 params.append(f"%{search}%")
 
             where_clause = " AND ".join(where_conditions)
+            
+            # 语言参数将作为最后一个参数
+            language_param_index = param_count + 1
 
             # 构建主查询
             base_query = f"""
@@ -188,8 +207,8 @@ async def get_tools(
                     tt.name, tt.title, tt.description
                 FROM tools t
                 LEFT JOIN categories c ON t.category_id = c.id
-                LEFT JOIN tool_translations tt ON t.id = tt.tool_id AND tt.language_code = ${param_count + 1}
-                LEFT JOIN category_translations ct ON c.id = ct.category_id AND ct.language_code = ${param_count + 1}
+                LEFT JOIN tool_translations tt ON t.id = tt.tool_id AND tt.language_code = ${language_param_index}
+                LEFT JOIN category_translations ct ON c.id = ct.category_id AND ct.language_code = ${language_param_index}
                 WHERE {where_clause}
                 ORDER BY t.featured DESC, t.rating DESC, t.view_count DESC, t.created_at DESC
             """
@@ -200,8 +219,8 @@ async def get_tools(
                 SELECT COUNT(DISTINCT t.id)
                 FROM tools t
                 LEFT JOIN categories c ON t.category_id = c.id
-                LEFT JOIN tool_translations tt ON t.id = tt.tool_id AND tt.language_code = ${param_count + 1}
-                LEFT JOIN category_translations ct ON c.id = ct.category_id AND ct.language_code = ${param_count + 1}
+                LEFT JOIN tool_translations tt ON t.id = tt.tool_id AND tt.language_code = ${language_param_index}
+                LEFT JOIN category_translations ct ON c.id = ct.category_id AND ct.language_code = ${language_param_index}
                 WHERE {where_clause}
             """
             total = await conn.fetchval(count_query, *params)
@@ -213,10 +232,33 @@ async def get_tools(
 
             rows = await conn.fetch(base_query, *params)
 
-            # 格式化响应
+            # 批量获取所有工具的标签
             tools = []
+            tool_ids = [row['id'] for row in rows]
+            
+            if tool_ids:
+                # 批量查询所有工具的标签
+                tags_query = """
+                    SELECT tt.tool_id, t.tag_key, tt.tag_type
+                    FROM tool_tags tt
+                    JOIN tags t ON tt.tag_id = t.id
+                    WHERE tt.tool_id = ANY($1)
+                """
+                tags_rows = await conn.fetch(tags_query, tool_ids)
+                
+                # 按工具ID组织标签数据
+                tools_tags = {}
+                for tag_row in tags_rows:
+                    tool_id = tag_row['tool_id']
+                    if tool_id not in tools_tags:
+                        tools_tags[tool_id] = []
+                    tools_tags[tool_id].append(tag_row['tag_key'])
+
+            # 格式化响应
             for row in rows:
                 tool_data = dict(row)
+                # 添加标签数据
+                tool_data['tags'] = tools_tags.get(row['id'], [])
                 tools.append(format_tool_response(tool_data, language))
 
             if all:
@@ -413,18 +455,143 @@ async def get_categories(language: str = Query("en", description="语言")):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"获取分类列表失败: {str(e)}")
 
+@app.get("/api/tags")
+async def get_tags(
+    language: str = Query("en", description="语言"),
+    type: Optional[str] = Query(None, description="标签类型过滤 (general/industry)"),
+    search: Optional[str] = Query(None, description="搜索关键词"),
+    limit: int = Query(100, ge=1, le=500, description="返回数量限制"),
+    popular: bool = Query(False, description="是否按使用频率排序")
+):
+    """获取标签列表 - 多语言架构版本"""
+    try:
+        # 标准化语言代码
+        language = normalize_language_code(language)
+        pool = await get_db_connection()
+        async with pool.acquire() as conn:
+            # 构建查询参数
+            params = []
+            param_count = 0
+
+            # 构建主查询
+            if popular:
+                # 按使用频率排序
+                query = """
+                    SELECT 
+                        t.tag_key,
+                        ttr.tag_name,
+                        tt.tag_type,
+                        COUNT(tt.tool_id) as usage_count
+                    FROM tags t
+                    JOIN tag_translations ttr ON t.id = ttr.tag_id AND ttr.language_code = $1
+                    JOIN tool_tags tt ON t.id = tt.tag_id
+                """
+                
+                where_conditions = []
+                params.append(language)
+                param_count = 1
+
+                # 标签类型过滤
+                if type and type in ['general', 'industry']:
+                    param_count += 1
+                    where_conditions.append(f"tt.tag_type = ${param_count}")
+                    params.append(type)
+
+                # 搜索功能
+                if search:
+                    param_count += 1
+                    where_conditions.append(f"ttr.tag_name ILIKE ${param_count}")
+                    params.append(f"%{search}%")
+
+                if where_conditions:
+                    query += " WHERE " + " AND ".join(where_conditions)
+
+                query += f"""
+                    GROUP BY t.tag_key, ttr.tag_name, tt.tag_type
+                    ORDER BY usage_count DESC, ttr.tag_name ASC
+                    LIMIT {limit}
+                """
+            else:
+                # 按字母顺序排序 - 获取所有标签（包括未使用的）
+                query = """
+                    SELECT 
+                        t.tag_key,
+                        ttr.tag_name,
+                        COALESCE(tag_stats.tag_type, 'general') as tag_type,
+                        COALESCE(tag_stats.usage_count, 0) as usage_count
+                    FROM tags t
+                    JOIN tag_translations ttr ON t.id = ttr.tag_id AND ttr.language_code = $1
+                    LEFT JOIN (
+                        SELECT 
+                            tag_id,
+                            tag_type,
+                            COUNT(tool_id) as usage_count
+                        FROM tool_tags
+                        GROUP BY tag_id, tag_type
+                    ) tag_stats ON t.id = tag_stats.tag_id
+                """
+                
+                where_conditions = []
+                params.append(language)
+                param_count = 1
+
+                # 标签类型过滤
+                if type and type in ['general', 'industry']:
+                    param_count += 1
+                    where_conditions.append(f"tag_stats.tag_type = ${param_count}")
+                    params.append(type)
+
+                # 搜索功能
+                if search:
+                    param_count += 1
+                    where_conditions.append(f"ttr.tag_name ILIKE ${param_count}")
+                    params.append(f"%{search}%")
+
+                if where_conditions:
+                    query += " WHERE " + " AND ".join(where_conditions)
+
+                query += f"""
+                    ORDER BY ttr.tag_name ASC
+                    LIMIT {limit}
+                """
+
+            rows = await conn.fetch(query, *params)
+
+            # 格式化响应 - 匹配前端Category接口
+            tags = []
+            for row in rows:
+                tags.append({
+                    "id": row['tag_key'],       # 前端期望的id字段
+                    "name": row['tag_name'],
+                    "slug": row['tag_key'],     # 前端期望的slug字段
+                    "description": f"{row['tag_type']} tag",  # 可选的描述
+                    "count": int(row['usage_count'])  # 前端期望的count字段
+                })
+
+            return APIResponse(data=tags)
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"获取标签列表失败: {str(e)}")
+
 @app.get("/api/images/{filename}")
 async def get_image(filename: str):
     """提供图片文件服务"""
     try:
         # 从环境变量获取图片基础路径
         base_path = os.getenv('FRONTEND_IMAGE_BASE_URL', '/Users/wingerliu/Downloads/startups/LookAiTools/crawler/screenshots')
-
+        
         # 构建完整文件路径 - 添加toolify子目录
         file_path = os.path.join(base_path, 'toolify', filename)
-
+        
+        # 添加调试日志
+        print(f"[DEBUG] 请求图片: {filename}")
+        print(f"[DEBUG] 基础路径: {base_path}")
+        print(f"[DEBUG] 完整路径: {file_path}")
+        print(f"[DEBUG] 文件存在: {os.path.exists(file_path)}")
+        
         # 检查文件是否存在
         if not os.path.exists(file_path):
+            print(f"[ERROR] 图片不存在: {file_path}")
             raise HTTPException(status_code=404, detail="图片不存在")
 
         # 返回文件
@@ -437,6 +604,8 @@ async def get_image(filename: str):
     except HTTPException:
         raise
     except Exception as e:
+        print(f"[ERROR] 获取图片异常: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"获取图片失败: {str(e)}")
         raise HTTPException(status_code=500, detail=f"获取图片失败: {str(e)}")
 
 if __name__ == "__main__":

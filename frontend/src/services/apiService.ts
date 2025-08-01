@@ -159,8 +159,21 @@ class APIService {
     return this.request<Category[]>(`/api/subcategories?language=${language}`)
   }
 
-  async getTags(language: string = 'en'): Promise<APIResponse<Category[]>> {
-    return this.request<Category[]>(`/api/tags?language=${language}`)
+  async getTags(language: string = 'en', options: {
+    popular?: boolean;
+    limit?: number;
+    type?: 'general' | 'industry';
+    search?: string;
+  } = {}): Promise<APIResponse<Category[]>> {
+    const searchParams = new URLSearchParams();
+    searchParams.append('language', language);
+    
+    if (options.popular) searchParams.append('popular', 'true');
+    if (options.limit) searchParams.append('limit', options.limit.toString());
+    if (options.type) searchParams.append('type', options.type);
+    if (options.search) searchParams.append('search', options.search);
+    
+    return this.request<Category[]>(`/api/tags?${searchParams.toString()}`);
   }
 
   // 提交工具

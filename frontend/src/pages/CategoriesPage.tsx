@@ -1,14 +1,13 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
-import { Grid, List, Search, Filter, ChevronDown, X } from 'lucide-react'
+import { Grid, List, Search, Filter, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import ToolCard from '@/components/tools/ToolCard'
 import { useCategoriesPageData } from '@/hooks/useTools'
-import { useClientPagination } from '@/hooks/useClientPagination'
-import type { Category, AITool } from '@/types'
+import { useServerPagination } from '@/hooks/useServerPagination'
 
 interface FilterState {
   category: string
@@ -17,7 +16,7 @@ interface FilterState {
 }
 
 export default function CategoriesPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [searchParams, setSearchParams] = useSearchParams()
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [showFilters, setShowFilters] = useState(false)
@@ -32,29 +31,29 @@ export default function CategoriesPage() {
   const {
     categories,
     tags,
-    loading: pageDataLoading,
-    error: pageDataError
+    loading: pageDataLoading
   } = useCategoriesPageData()
 
-  // 使用客户端分页 - 一次性获取所有数据，前端分页
+  // 使用服务端分页 - 按需获取数据，后端筛选
   const {
     tools,
     loading: toolsLoading,
     pagination,
     currentPage,
     setCurrentPage
-  } = useClientPagination({
+  } = useServerPagination({
     category: filters.category || undefined,
     tags: filters.tags.length > 0 ? filters.tags : undefined,
     search: filters.search || undefined,
-    pageSize: 12
+    pageSize: 12,
+    debounceMs: 300
   })
 
   // 更新筛选器
   const updateFilters = (newFilters: Partial<FilterState>) => {
     const updatedFilters = { ...filters, ...newFilters }
     setFilters(updatedFilters)
-    // 注意：不需要手动重置页码，useClientPagination会自动处理
+    // 注意：不需要手动重置页码，useServerPagination会自动处理
 
     // 更新URL参数
     const params = new URLSearchParams()
@@ -67,7 +66,7 @@ export default function CategoriesPage() {
   // 清除筛选器
   const clearFilters = () => {
     setFilters({ category: '', tags: [], search: '' })
-    setCurrentPage(1)
+    // 不需要手动设置页码，useServerPagination会自动处理
     setSearchParams({})
   }
 

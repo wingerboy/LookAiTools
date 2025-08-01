@@ -370,7 +370,7 @@ export function useCategoriesPageData() {
         // 并发获取分类和标签数据
         const [categoriesResponse, tagsResponse] = await Promise.all([
           apiService.getCategories(i18n.language),
-          apiService.getTags(i18n.language)
+          apiService.getTags(i18n.language, { popular: true, limit: 20 })  // 获取热门标签
         ])
 
         if (!isCancelled) {
@@ -462,7 +462,7 @@ export function useTags() {
           setError(null)
         }
 
-        const response = await apiService.getTags(i18n.language)
+        const response = await apiService.getTags(i18n.language, { popular: true, limit: 20 })
 
         if (!isCancelled) {
           if (response.success) {
